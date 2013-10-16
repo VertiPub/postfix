@@ -18,7 +18,7 @@
 # limitations under the License.
 #
 
-require 'ipaddress'
+require 'resolv'
 
 package "postfix"
 
@@ -56,7 +56,7 @@ end
 # postfix will fail to start if the hostname is an ip addr.  Example:
 # postfix: warning: valid_hostname: numeric hostname: 1.2.3.4
 # postfix: fatal: file /etc/postfix/main.cf: parameter myhostname: bad parameter value: 1.2.3.4
-if IPAddress.valid? node['postfix']['main']['myhostname']
+if node['postfix']['main']['myhostname'] =~ Resolv::IPv4::Regex
     node.set['postfix']['main']['myhostname'] = 'localhost'
     node.set['postfix']['main']['mydomain'] = 'localdomain'
 end
